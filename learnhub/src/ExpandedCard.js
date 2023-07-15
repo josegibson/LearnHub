@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
-import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
 import NoteContainer from "./Notes/NoteContainer";
 
 function extractDomain(link) {
@@ -65,7 +65,7 @@ const Header = ({ title, content, link, onClose }) => (
       }}
       onClick={onClose}
     >
-      <CloseIcon />
+      <DoneIcon/>
     </IconButton>
     <Typography variant="h5" component="h2" color="text.primary">
       {title}

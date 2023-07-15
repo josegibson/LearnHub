@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, AppBar, Toolbar, Button } from "@mui/material";
 import ExpandedCard from "./ExpandedCard";
 import CardView from "./CardView";
+import NewExpandedCard from "./NewExpandedCard";
 
 const cardDetailsList = [
   {
@@ -53,6 +54,7 @@ const cardDetailsList = [
 
 function App() {
   const [selectedCard, setSelectedCard] = useState(null);
+  const [newCard, setNewCard] = useState(null);
 
   const handleCardClick = (cardDetails) => {
     setSelectedCard(cardDetails);
@@ -62,19 +64,71 @@ function App() {
     setSelectedCard(null);
   };
 
+  const handleAddCard = (newCard) => {
+    setNewCard(newCard);
+  };
+
+  const handleSaveNewCard = (newCardData) => {
+    // Save the new card data into the cardDetailsList
+    cardDetailsList.push(newCardData);
+
+    // Reset the new card state
+    setNewCard(null);
+  };
+
   return (
     <Box>
+      <AppBar
+        position="static"
+        sx={{ backgroundColor: "#ffffff", padding: "20px" }}
+        elevation={0}
+      >
+        <Toolbar>
+          <Button
+            variant="text"
+            sx={{
+              borderRadius: "20px",
+              marginRight: "10px",
+              paddingRight: "16px",
+              paddingLeft: "16px",
+            }}
+          >
+            Home
+          </Button>
+          <Button
+            variant="text"
+            sx={{
+              borderRadius: "20px",
+              marginRight: "10px",
+              paddingRight: "16px",
+              paddingLeft: "16px",
+            }}
+          >
+            Create
+          </Button>
+        </Toolbar>
+      </AppBar>
+
       {selectedCard ? (
         <ExpandedCard
           cardDetails={selectedCard}
           onClose={handleExpandedCardClose}
         />
+      ) : newCard ? (
+        <NewExpandedCard
+          cardDetails={newCard}
+          onSave={handleSaveNewCard}
+          onClose={handleExpandedCardClose}
+        />
       ) : (
-        <CardView cardDetails={cardDetailsList} onCardClick={handleCardClick} />
+        <CardView
+          cardDetails={cardDetailsList}
+          onCardClick={handleCardClick}
+          handleAddCard={handleAddCard}
+        />
       )}
     </Box>
   );
 }
 
 export default App;
-

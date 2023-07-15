@@ -1,45 +1,5 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Typography,
-  Box,
-} from "@mui/material";
-
-const FocusModal = ({ hovered }) => (
-  <Box
-    sx={{
-      position: "absolute",
-      bottom: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "left",
-      justifyContent: "flex-end",
-      transition: "background-color 0.5s",
-    }}
-  >
-    <Box backgroundColor="#ffffff" borderRadius={"20px"} margin={"6px"}>
-      <Typography
-        color="text.secondary"
-        align="center"
-        sx={{
-          color: "#000000",
-          padding: "10px",
-          fontSize: "12px",
-          fontWeight: "bold",
-        }}
-      >
-        Link to More Info
-      </Typography>
-    </Box>
-  </Box>
-);
+import { Paper, CardContent, CardHeader, Typography } from "@mui/material";
 
 export default function CardComponent({ title, content, onClick }) {
   const [hovered, setHovered] = useState(false);
@@ -48,18 +8,17 @@ export default function CardComponent({ title, content, onClick }) {
   const handleMouseLeave = () => setHovered(false);
 
   return (
-    <Card
+    <Paper
+      elevation={hovered ? 4 : 1}
       sx={{
         maxWidth: 200,
         borderRadius: "20px",
-        filter: hovered ? "brightness(1)" : "brightness(1)",
+        transition: "box-shadow 0.3s",
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
-      {hovered && <FocusModal hovered={hovered} />}
-
       <CardHeader
         title={title}
         titleTypographyProps={{ fontSize: "16px", align: "left" }}
@@ -70,6 +29,6 @@ export default function CardComponent({ title, content, onClick }) {
           {content}
         </Typography>
       </CardContent>
-    </Card>
+    </Paper>
   );
 }
