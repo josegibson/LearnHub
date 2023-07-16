@@ -51,7 +51,7 @@ const NoteContainer = ({ notes }) => {
   };
 
   return (
-    <Box display="flex" flexWrap="wrap" gap={2} padding={2}>
+    <Box display="flex" flexWrap="wrap" gap={2} padding={0.1} paddingTop={5}>
       {noteList.map((note, index) => (
         <Note
           key={index}

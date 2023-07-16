@@ -7,7 +7,7 @@ import NewCard from "./NewCard";
 const CardView = ({ cardDetails, onCardClick }) => {
 
   return (
-    <Box sx={{ padding: "10px" }}>
+    <Box sx={{ padding: "30px" }}>
       <Masonry columns={4} spacing={2}>
         {cardDetails.map((card, index) => (
           <CardComponent

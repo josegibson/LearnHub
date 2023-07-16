@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Box, AppBar, Toolbar, Button } from "@mui/material";
-import ExpandedCard from "./ExpandedCard";
+import { Box, Tab, Tabs } from "@mui/material";
 import CardView from "./CardView";
 import NewExpandedCard from "./NewExpandedCard";
 
@@ -53,8 +52,14 @@ const cardDetailsList = [
 ];
 
 function App() {
+
   const [selectedCard, setSelectedCard] = useState(null);
   const [newCard, setNewCard] = useState(null);
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
 
   const handleCardClick = (cardDetails) => {
     setSelectedCard(cardDetails);
@@ -78,55 +83,15 @@ function App() {
 
   return (
     <Box>
-      <AppBar
-        position="static"
-        sx={{ backgroundColor: "#ffffff", padding: "20px" }}
-        elevation={0}
-      >
-        <Toolbar>
-          <Button
-            variant="text"
-            sx={{
-              borderRadius: "20px",
-              marginRight: "10px",
-              paddingRight: "16px",
-              paddingLeft: "16px",
-            }}
-          >
-            Home
-          </Button>
-          <Button
-            variant="text"
-            sx={{
-              borderRadius: "20px",
-              marginRight: "10px",
-              paddingRight: "16px",
-              paddingLeft: "16px",
-            }}
-          >
-            Create
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Tabs value={selectedTab} onChange={handleTabChange} centered>
+        <Tab label="Home" />
+        <Tab label="Create" />
+      </Tabs>
 
-      {selectedCard ? (
-        <ExpandedCard
-          cardDetails={selectedCard}
-          onClose={handleExpandedCardClose}
-        />
-      ) : newCard ? (
-        <NewExpandedCard
-          cardDetails={newCard}
-          onSave={handleSaveNewCard}
-          onClose={handleExpandedCardClose}
-        />
-      ) : (
-        <CardView
-          cardDetails={cardDetailsList}
-          onCardClick={handleCardClick}
-          handleAddCard={handleAddCard}
-        />
+      {selectedTab === 0 && (
+        <CardView cardDetails={cardDetailsList} onCardClick={handleCardClick} />
       )}
+      {selectedTab === 1 && <NewExpandedCard onSave={handleSaveNewCard} />}
     </Box>
   );
 }

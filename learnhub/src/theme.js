@@ -8,6 +8,11 @@ const theme = createTheme({
     secondary: {
       main: "#ffffff", // White color for secondary elements
     },
+    greyed: {
+      dark: '#888888',
+      normal : '#dbdbdb',
+      light: '#f5f5f5'
+    }
   },
 });
 
