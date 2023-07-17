@@ -1,25 +1,25 @@
 import React, { useState } from "react";
 import {
   Box,
-  Button,
   IconButton,
   TextField,
   TextareaAutosize,
   Typography,
+  useTheme,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import theme from "./themeforcreator";
 import DoneIcon from "@mui/icons-material/Done";
+import { Transition } from "react-transition-group";
 
 const ExpandableNoteForm = ({ onNoteAdd }) => {
+  const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
-
-  const handleExpand = () => {
-    setExpanded(true);
-  };
-
   const [topic, setTopic] = useState("");
   const [content, setContent] = useState("");
+
+  const handleExpand = () => {
+    setExpanded(!expanded);
+  };
 
   const handleAddNote = () => {
     // Handle adding the note (e.g., save it or perform an action)
@@ -44,22 +44,35 @@ const ExpandableNoteForm = ({ onNoteAdd }) => {
     setExpanded(false);
   };
 
-  const closeButtonRotation = expanded ? "45deg" : "0deg";
+  const duration = 300; // Transition duration in milliseconds
+
+  const defaultStyle = {
+    transition: `opacity ${duration}ms ease-in-out`,
+    opacity: 0,
+    maxHeight: 0,
+    overflow: "hidden",
+  };
+
+  const transitionStyles = {
+    entering: { opacity: 0, maxHeight: 0 },
+    entered: { opacity: 1, maxHeight: "300px" },
+    exiting: { opacity: 0, maxHeight: 0 },
+    exited: { opacity: 0, maxHeight: 0 },
+  };
 
   return (
     <Box
       sx={{
         height: expanded ? "250px" : "60px",
-        width: expanded ? "350px" : "110px",
+        width: expanded ? "350px" : "120px",
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "flex-start",
         borderRadius: "10px",
         border: "2px dashed",
-        borderColor: "tertiary.main",
+        borderColor: theme.palette.tertiary.main,
         position: "relative",
         cursor: "pointer",
-        //padding: "0px 10px",
         transition:
           "height 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), width 0.2s cubic-bezier(0.25, 0.8, 0.5, 1)",
         overflow: "hidden",
@@ -67,10 +80,9 @@ const ExpandableNoteForm = ({ onNoteAdd }) => {
       onClick={expanded ? undefined : handleExpand}
     >
       <IconButton
-        disabled={!expanded}
         sx={{
           margin: "8px 0px",
-          marginBottom: 'auto'
+          marginBottom: "auto",
         }}
         onClick={handleNoteClear}
       >
@@ -78,39 +90,19 @@ const ExpandableNoteForm = ({ onNoteAdd }) => {
           size="small"
           sx={{
             transition: "transform 0.3s ease",
-            transform: `rotate(${closeButtonRotation})`,
+            transform: `rotate(${expanded ? "45deg" : "0deg"})`,
           }}
         />
       </IconButton>
 
-      {!expanded && (
-        <Typography
-          component="div"
-          sx={{
-            margin: "18px 10px 18px 0px",
-            color: theme.palette.primary.main,
-          }}
-        >
-          NOTE
-        </Typography>
-      )}
-      {expanded && (
-        <Box
-          sx={{
-            transition: "max-height 0.5s cubic-bezier(0.25, 0.8, 0.5, 1)",
-            maxHeight: "300px",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "flex-start",
-          }}
-        >
+      <Transition in={expanded} timeout={duration}>
+        {(state) => (
           <Box
             sx={{
-              transition: "opacity 1s ease 1s",
-              opacity: expanded ? 1 : 0,
-              maxHeight: expanded ? "300px" : 0,
-              overflow: "hidden",
+              position: "relative",
+              ...defaultStyle,
+              ...transitionStyles[state],
+              transition: `opacity ${duration}ms ease-in-out, max-height ${duration}ms ease-in-out`,
             }}
           >
             <TextField
@@ -124,7 +116,7 @@ const ExpandableNoteForm = ({ onNoteAdd }) => {
               onChange={handleTopicInputChange}
               InputProps={{
                 disableUnderline: true,
-                style: {
+                sx: {
                   color: theme.palette.primary.main,
                   fontWeight: "bold",
                 },
@@ -132,7 +124,7 @@ const ExpandableNoteForm = ({ onNoteAdd }) => {
               InputLabelProps={{
                 shrink: false,
                 focused: false,
-                style: {
+                sx: {
                   visibility: topic === "" ? "visible" : "hidden",
                   color: theme.palette.primary.main,
                   fontWeight: "bold",
@@ -143,6 +135,7 @@ const ExpandableNoteForm = ({ onNoteAdd }) => {
               name="info"
               onChange={handleContentInputChange}
               placeholder="Note here"
+              resize="none"
               minRows={7}
               fullWidth
               style={{
@@ -157,14 +150,34 @@ const ExpandableNoteForm = ({ onNoteAdd }) => {
                 borderRadius: "10px",
               }}
             />
+            <IconButton
+              sx={{
+                fontSize: "22px",
+                color: "primary.main",
+                margin: "10px",
+                position: "absolute",
+                top: "0px",
+                right: "0px",
+              }}
+              onClick={handleAddNote}
+            >
+              <DoneIcon fontSize="inherit" />
+            </IconButton>
           </Box>
-          <IconButton
-            sx={{ fontSize: "22px", color: "primary.main", margin: "10px" }}
-            onClick={handleAddNote}
-          >
-            <DoneIcon fontSize="inherit" />
-          </IconButton>
-        </Box>
+        )}
+      </Transition>
+
+      {!expanded && (
+        <Typography
+          component="div"
+          sx={{
+            margin: "17px 12px",
+            color: theme.palette.primary.main,
+            fontWeight: "bold",
+          }}
+        >
+          NOTE
+        </Typography>
       )}
     </Box>
   );

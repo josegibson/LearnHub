@@ -104,7 +104,7 @@ const NewExpandedCard = ({ onSave }) => {
           height={"250px"}
           display="flex"
           flexDirection={"row"}
-          justifyContent={"space-between"}
+          justifyContent={"center"}
           padding={"30px 0px"}
           sx={{
             gap: "20px",

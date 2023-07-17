@@ -1,26 +1,23 @@
 import React, { useState } from "react";
 import {
   Box,
-  Button,
   IconButton,
-  Link,
   TextField,
-  TextareaAutosize,
   Typography,
+  useTheme,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DoneIcon from "@mui/icons-material/Done";
-import theme from "./themeforcreator";
+import { Transition } from "react-transition-group";
 
 const ExpandableLinkForm = ({ onLinkAdd }) => {
+  const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
-
+  const [link, setLink] = useState("");
 
   const handleExpand = () => {
     setExpanded(true);
   };
-
-  const [link, setLink] = useState("");
 
   const handleLinkInputChange = (e) => {
     setLink(e.target.value);
@@ -41,6 +38,21 @@ const ExpandableLinkForm = ({ onLinkAdd }) => {
 
   const closeButtonRotation = expanded ? "45deg" : "0deg";
 
+  const duration = 500; // Transition duration in milliseconds
+
+  const defaultStyle = {
+    transition: `max-height ${duration}ms cubic-bezier(0.25, 0.8, 0.5, 1)`,
+    maxHeight: 0,
+    overflow: "hidden",
+  };
+
+  const transitionStyles = {
+    entering: { maxHeight: 0 },
+    entered: { maxHeight: "300px" },
+    exiting: { maxHeight: 0 },
+    exited: { maxHeight: 0 },
+  };
+
   return (
     <Box
       sx={{
@@ -51,7 +63,7 @@ const ExpandableLinkForm = ({ onLinkAdd }) => {
         justifyContent: "center",
         borderRadius: "10px",
         border: "2px dashed",
-        borderColor: "tertiary.main",
+        borderColor: theme.palette.tertiary.main,
         position: "relative",
         cursor: "pointer",
         padding: "0px 10px",
@@ -61,14 +73,19 @@ const ExpandableLinkForm = ({ onLinkAdd }) => {
       onClick={expanded ? undefined : handleExpand}
     >
       <IconButton
-        disabled={!expanded}
         sx={{
-          transition: "transform 0.3s ease",
-          transform: `rotate(${closeButtonRotation})`,
+          margin: "8px 0px",
+          marginBottom: "auto",
         }}
         onClick={handleLinkClear}
       >
-        <AddIcon size="small" />
+        <AddIcon
+          size="small"
+          sx={{
+            transition: "transform 0.3s ease",
+            transform: `rotate(${expanded ? "45deg" : "0deg"})`,
+          }}
+        />
       </IconButton>
       {!expanded && (
         <Typography
@@ -76,58 +93,56 @@ const ExpandableLinkForm = ({ onLinkAdd }) => {
           sx={{
             margin: "18px 10px 18px 0px",
             color: theme.palette.primary.main,
+            fontWeight: "bold",
           }}
         >
           LINK
         </Typography>
       )}
-      {expanded && (
-        <Box
-          sx={{
-            width: "100%",
-            transition: "max-height 0.5s cubic-bezier(0.25, 0.8, 0.5, 1)",
-            maxHeight: "300px",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <TextField
-            variant="standard"
-            size="small"
-            label="Paste link here"
-            value={link}
+      <Transition in={expanded} timeout={duration}>
+        {(state) => (
+          <Box
             sx={{
-              paddingBottom: "10px",
+              width: "100%",
+              ...defaultStyle,
+              ...transitionStyles[state],
             }}
-            onChange={handleLinkInputChange}
-            InputProps={{
-              disableUnderline: true,
-              style: {
-                color: theme.palette.primary.main,
-                fontWeight: "regular",
-              },
-            }}
-            InputLabelProps={{
-              shrink: false,
-              focused: false,
-              style: {
-                visibility: link === "" ? "visible" : "hidden",
-                color: theme.palette.primary.main,
-                fontWeight: "regular",
-              },
-            }}
-          />
-          <IconButton
-            sx={{ fontSize: "22px", color: "primary.main" }}
-            onClick={handleAddLink}
           >
-            <DoneIcon fontSize="inherit" />
-          </IconButton>
-        </Box>
-      )}
+            <TextField
+              variant="standard"
+              size="small"
+              label="Paste link here"
+              value={link}
+              sx={{
+                paddingBottom: "10px",
+              }}
+              onChange={handleLinkInputChange}
+              InputProps={{
+                disableUnderline: true,
+                sx: {
+                  color: theme.palette.primary.main,
+                  fontWeight: "regular",
+                },
+              }}
+              InputLabelProps={{
+                shrink: false,
+                focused: false,
+                sx: {
+                  visibility: link === "" ? "visible" : "hidden",
+                  color: theme.palette.primary.main,
+                  fontWeight: "regular",
+                },
+              }}
+            />
+            <IconButton
+              sx={{ fontSize: "22px", color: "primary.main" }}
+              onClick={handleAddLink}
+            >
+              <DoneIcon fontSize="inherit" />
+            </IconButton>
+          </Box>
+        )}
+      </Transition>
     </Box>
   );
 };
