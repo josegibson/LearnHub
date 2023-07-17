@@ -28,7 +28,6 @@ const ImageUploader = ({ onFileUpload }) => {
   return (
     <Box
       sx={{
-        width: "50%",
         display: "flex",
         padding: "20px",
         borderRadius: "10px",
@@ -87,7 +86,7 @@ const ImageUploader = ({ onFileUpload }) => {
           >
             {isDragActive
               ? "Drop here"
-              : "Drag and drop or click to upload the image here"}
+              : "Drag and drop or click to upload a cover image here"}
           </Typography>
         )}
       </Box>

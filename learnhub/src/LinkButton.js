@@ -45,9 +45,14 @@ const LinkButton = ({ onLinkAdd }) => {
     >
       <IconButton
         sx={{
-          fontSize: "25px",
+          fontSize: "20px",
           transform: `rotate(${closeButtonRotation})`,
           transition: "transform 0.3s",
+          color: "primary.main",
+          ":hover": {
+            bgcolor: "transparent",
+            color: "grey.700",
+          },
         }}
         onClick={handleLinkClear}
       >
@@ -66,6 +71,9 @@ const LinkButton = ({ onLinkAdd }) => {
         onChange={handleLinkInputChange}
         InputProps={{
           disableUnderline: true,
+          style: {
+            color: theme.palette.primary.main,
+          },
         }}
         InputLabelProps={{
           shrink: false,
@@ -77,7 +85,10 @@ const LinkButton = ({ onLinkAdd }) => {
         }}
       />
       {link !== "" && (
-        <IconButton sx={{ fontSize: "25px" }} onClick={handleAddLink}>
+        <IconButton
+          sx={{ fontSize: "20px", color: "primary.main" }}
+          onClick={handleAddLink}
+        >
           <DoneIcon fontSize="inherit" />
         </IconButton>
       )}
